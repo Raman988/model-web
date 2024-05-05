@@ -1,12 +1,20 @@
 <html>
 
-<body bgcolor=#a3cfb4>
+<body bgcolor=#fefcfd>
 
     <center>
 
-        <h1>  PREDICTION :{{data}}  </h1>
+        <h1>  PREDICTION   </h1>
     
+        {%if data == 0%}
+        <h1>Normal</h1>  
+        
     
+        {%else%}
+        <h1>Abnormal</h1>
+       
+        
+        {%endif%}
 
         <br><br>
     <a href='/'>go back to home page</a>

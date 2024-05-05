@@ -1,21 +1,77 @@
-<html>
-    <body bgcolor=#d4a3ae>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fault Detection using Sound Analysis</title>
+<style>
+    body {
+        background-color: #f2eaec;
+        font-family: Arial, sans-serif;
+    }
+    .container {
+        width: 50%;
+        margin: 0 auto;
+        padding: 50px 0;
+        /* border: 2px solid #8e5572; Add border */
+        background-color: #fefcfd;
+        border-radius: 20px;
+        position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Add background color */
+    }
+    h1 {
+        text-align: center;
+    }
+    form {
+        text-align: center;
+    }
+    input[type="text"],
+    input[type="file"],
+    input[type="submit"] {
+        padding: 10px;
+        margin: 10px;
+        width: 80%;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+    input[type="submit"] {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+    input[type="submit"]:hover {
+        background-color: #45a049;
+    }
+</style>
+</head>
+<body>
 
-        <center>
+<div class="container">
+    <h1>Fault detection using Sound Analysis</h1>
+    <form id="uploadForm" method="POST" action="{{url_for('home')}}" enctype="multipart/form-data">
+        <label for="a">Section:</label>
+        <input type="text" id="a" name="a" placeholder=""><br><br>
+        <label for="a">Machine:</label>
+        <input type="text" id="b" name="b" placeholder=""><br><br>
+        <label for="file">Upload File:</label>
+        <input type="file" id="file" name="file"><br><br>
+        <input type="submit" value="Predict!">
+    </form>
+</div>
 
-        <h1> IRIS FLOWER DETECTION </h1><br>
-        
-        <form method="POST" action="{{url_for('home')}}" enctype="multipart/form-data">
-           <b> First value :  <input type="text", name='a', placeholder="enter 1"> <br><br>
-            <label for="file">Upload File:</label>
-            <input type="file" name="file" id="file"><br><br> <br></b>
-          
-            <input type="submit" , value='predict!' >
-        </form>
+<script>
+    document.getElementById('uploadForm').addEventListener('submit', function(event) {
+        var a = document.getElementById('a').value;
+        var file = document.getElementById('file').value;
+        if (!a || !file) {
+            event.preventDefault();
+            alert('Please fill in all fields.');
+        }
+    });
+</script>
 
-        
-        
-    </center>
-
-    </body>
+</body>
 </html>

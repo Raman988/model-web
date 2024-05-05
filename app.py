@@ -34,7 +34,7 @@ import librosa
 ########################################################################
 param = com.yaml_load()
 # model = pickle.load(open('iri.pkl', 'rb'))
-model = keras_model.load_model("model_fan.hdf5")
+
 
 app = Flask(__name__)
 
@@ -49,17 +49,26 @@ def man():
 def home():
     # data1 = request.form['a']
     # data2 = request.form['b']
-    # machine_type = request.form['a']
     section_idx = request.form['a']
+    machine_type = request.form['b']
     file = request.files['file']
     # print(section_idx)
     # arr = np.array([[data1, data2, data3, data4]])
     # load anomaly score distribution for determining threshold
-    score_distr_file_path = "score_distr_fan.pkl"
-    shape_hat, loc_hat, scale_hat = joblib.load(score_distr_file_path)
-    # determine threshold for decision
-    decision_threshold = scipy.stats.gamma.ppf(q=param["decision_threshold"], a=shape_hat, loc=loc_hat, scale=scale_hat)
-    
+    if machine_type == "fan":
+       model = keras_model.load_model("model_fan.hdf5")
+    elif machine_type == "pump":
+       model = keras_model.load_model("model_pump.hdf5")
+    if machine_type == "fan":
+       score_distr_file_path = "score_distr_fan.pkl"
+       shape_hat, loc_hat, scale_hat = joblib.load(score_distr_file_path)
+       # determine threshold for decision
+       decision_threshold = scipy.stats.gamma.ppf(q=param["decision_threshold"], a=shape_hat, loc=loc_hat, scale=scale_hat)
+    elif machine_type == "pump":
+        score_distr_file_path = "score_distr_pump.pkl"
+        shape_hat, loc_hat, scale_hat = joblib.load(score_distr_file_path)
+        # determine threshold for decision
+        decision_threshold = scipy.stats.gamma.ppf(q=param["decision_threshold"], a=shape_hat, loc=loc_hat, scale=scale_hat)
 
 # Assuming 'file_data' contains the wave file data
     y, sr = librosa.core.load(file, sr=None, mono=True)
@@ -78,10 +87,11 @@ def home():
 
     # 1D vector to 2D image
     data = data.reshape(data.shape[0], param["feature"]["n_frames"], param["feature"]["n_mels"], 1)
-
+    
     p = model.predict(data)[:, int(section_idx): int(section_idx) + 1]
     y_pred = np.mean(np.log(np.maximum(1.0 - p, sys.float_info.epsilon) 
                                - np.log(np.maximum(p, sys.float_info.epsilon))))
+    decision_result = 0
     if y_pred > decision_threshold:
         decision_result =1
     else:
