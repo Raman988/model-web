@@ -1,0 +1,21 @@
+<html>
+    <body bgcolor=#d4a3ae>
+
+        <center>
+
+        <h1> IRIS FLOWER DETECTION </h1><br>
+        
+        <form method="POST" action="{{url_for('home')}}" enctype="multipart/form-data">
+           <b> First value :  <input type="text", name='a', placeholder="enter 1"> <br><br>
+            <label for="file">Upload File:</label>
+            <input type="file" name="file" id="file"><br><br> <br></b>
+          
+            <input type="submit" , value='predict!' >
+        </form>
+
+        
+        
+    </center>
+
+    </body>
+</html>
